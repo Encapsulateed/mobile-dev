@@ -1,0 +1,7 @@
+**/.idea/
+**/.dart_tool/
+**/android/
+**/build/
+*.metadata
+*.yaml
+*.iml
