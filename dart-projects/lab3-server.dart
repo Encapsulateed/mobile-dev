@@ -4,9 +4,9 @@ import 'dart:io';
 const String filePath = 'number.json';
 
 void main() async {
-  final server = await HttpServer.bind(InternetAddress.anyIPv4, 8080);
+  final server = await HttpServer.bind(InternetAddress.anyIPv4, 8000);
 
-  print('now listening on http://localhost:8080');
+  print('now listening on http://localhost:8000');
 
   await for (HttpRequest request in server) {
     request.response.headers.add('Access-Control-Allow-Origin', '*');

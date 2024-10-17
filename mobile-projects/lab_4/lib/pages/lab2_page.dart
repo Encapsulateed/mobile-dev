@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-
-
 class Lab2Screen extends StatelessWidget {
+  const Lab2Screen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -11,24 +11,27 @@ class Lab2Screen extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyForm(),
+      home: const SwitchControl(),
     );
   }
 }
 
-class MyForm extends StatefulWidget {
+class SwitchControl extends StatefulWidget {
+  const SwitchControl({super.key});
+
   @override
-  _MyFormState createState() => _MyFormState();
+  _SwitchControlState createState() => _SwitchControlState();
 }
 
-class _MyFormState extends State<MyForm> {
-  final _formKey = GlobalKey<FormState>();
-  final _textController = TextEditingController();
+class _SwitchControlState extends State<SwitchControl> {
+  bool _isOn = false;
 
-  Future<void> sendText() async {
-    final text = _textController.text;
-    final url = Uri.parse('http://iocontrol.ru/api/sendData/tested/on_off/$text'); // Измените на ваш сервер и параметр
+  Future<void> _toggleSwitch(bool value) async {
+    setState(() {
+      _isOn = value;
+    });
 
+    final url = Uri.parse('http://iocontrol.ru/api/sendData/tested/on_off/${_isOn ? '1' : '0'}');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -43,16 +46,10 @@ class _MyFormState extends State<MyForm> {
   }
 
   @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lab 2'),
+        title: const Text('Lab 2 - Switch Control'),
         centerTitle: true,
       ),
       body: Center(
@@ -65,54 +62,27 @@ class _MyFormState extends State<MyForm> {
             ),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      'Отправка данных',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Text(
+                    'Переключатель состояния',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      controller: _textController,
-                      decoration: InputDecoration(
-                        labelText: 'Введите текст',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Пожалуйста, введите текст';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          sendText();
-                        }
-                      },
-                      child: Text(
-                        'Отправить',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 20),
+                  SwitchListTile(
+                    title: const Text('Состояние'),
+                    value: _isOn,
+                    onChanged: (value) {
+                      _toggleSwitch(value);
+                    },
+                    activeColor: Colors.green,
+                    inactiveThumbColor: Colors.red,
+                  ),
+                ],
               ),
             ),
           ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ParabolaAnimationScreen extends StatefulWidget {
+  const ParabolaAnimationScreen({super.key});
+
   @override
   _ParabolaAnimationScreenState createState() => _ParabolaAnimationScreenState();
 }
@@ -38,7 +40,7 @@ class _ParabolaAnimationScreenState extends State<ParabolaAnimationScreen> with 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Parabola Animation"),
+        title: const Text("Parabola Animation"),
       ),
       body: Column(
         children: [
@@ -48,7 +50,7 @@ class _ParabolaAnimationScreenState extends State<ParabolaAnimationScreen> with 
                 animation: _animation,
                 builder: (context, child) {
                   return CustomPaint(
-                    size: Size(double.infinity, double.infinity),
+                    size: const Size(double.infinity, double.infinity),
                     painter: ParabolaPainter(a, b, c),
                   );
                 },
@@ -67,7 +69,7 @@ class _ParabolaAnimationScreenState extends State<ParabolaAnimationScreen> with 
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         children: [
-          Text(label, style: TextStyle(fontSize: 18)),
+          Text(label, style: const TextStyle(fontSize: 18)),
           Slider(
             value: label == "b" ? b : c,
             min: min,

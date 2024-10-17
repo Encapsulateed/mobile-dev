@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-
 class Lab3Screen extends StatelessWidget {
+  const Lab3Screen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -13,25 +14,27 @@ class Lab3Screen extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: NumberForm(),
+      home: const NumberForm(),
     );
   }
 }
 
 class NumberForm extends StatefulWidget {
+  const NumberForm({super.key});
+
   @override
   _NumberFormState createState() => _NumberFormState();
 }
 
 class _NumberFormState extends State<NumberForm> {
-  final URL = 'http://127.0.0.1:8080';
+  final URL = 'http://192.168.1.71:8000';
 
   final _formKey = GlobalKey<FormState>();
   final _numberController = TextEditingController();
   int _currentNumber = 0;
 
   Future<void> sendNumber() async {
-    final url = Uri.parse('${URL}/setNumber');
+    final url = Uri.parse('$URL/setNumber');
     final response = await http.post(
       url,
       headers: {
@@ -43,13 +46,13 @@ class _NumberFormState extends State<NumberForm> {
     );
 
     if (response.statusCode == 200) {
-      print('Num sent: ${_currentNumber}');
+      print('Num sent: $_currentNumber');
     } else {
       print('Error: ${response.statusCode}');
     }
   }
   Future<void> sendNumberFromNumberController() async {
-    final url = Uri.parse('${URL}/setNumber');
+    final url = Uri.parse('$URL/setNumber');
     final response = await http.post(
       url,
       headers: {
@@ -68,7 +71,7 @@ class _NumberFormState extends State<NumberForm> {
   }
 //${URL}
   Future<void> getNumber() async {
-    final url = Uri.parse('${URL}/getNumber');
+    final url = Uri.parse('$URL/getNumber');
 
     final response = await http.get(url);
 
@@ -103,7 +106,7 @@ class _NumberFormState extends State<NumberForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lab3'),
+        title: const Text('Lab3'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -113,7 +116,7 @@ class _NumberFormState extends State<NumberForm> {
             children: <Widget>[
               TextFormField(
                 controller: _numberController,
-                decoration: InputDecoration(labelText: 'Запишите число'),
+                decoration: const InputDecoration(labelText: 'Запишите число'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -129,27 +132,27 @@ class _NumberFormState extends State<NumberForm> {
                     sendNumberFromNumberController();
                   }
                 },
-                child: Text('Отправить'),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: getNumber,
-                child: Text('Получить число'),
+                child: const Text('Отправить'),
               ),
               const SizedBox(height: 20),
-              Text('Current: $_currentNumber', style: TextStyle(fontSize: 20)),
-              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: getNumber,
+                child: const Text('Получить число'),
+              ),
+              const SizedBox(height: 20),
+              Text('Current: $_currentNumber', style: const TextStyle(fontSize: 20)),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
                     onPressed: decrement,
-                    child: Text('Уменьшить'),
+                    child: const Text('Уменьшить'),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   ElevatedButton(
                     onPressed: increment,
-                    child: Text('Увеличить'),
+                    child: const Text('Увеличить'),
                   ),
                 ],
               ),

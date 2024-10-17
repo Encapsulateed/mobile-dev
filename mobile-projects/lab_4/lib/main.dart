@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'pages/lab2_page.dart';
 import 'pages/lab3_page.dart';
 import 'pages/parabola.dart';
+import 'pages/lab5_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,27 +18,33 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.blue),
       initialRoute: '/parabola',
       routes: {
-        '/parabola': (context) => ParabolaAnimationScreen(),
-        '/lab2': (context) => Lab2Screen(),
-        '/lab3': (context) => Lab3Screen(),
+        '/parabola': (context) => const BaseScaffold(child: ParabolaAnimationScreen()),
+        '/lab2': (context) => const BaseScaffold(child: Lab2Screen()),
+        '/lab3': (context) => const BaseScaffold(child: Lab3Screen()),
+        '/lab5': (context) => const BaseScaffold(child: Lab5Screen()),
       },
-      home: HomeScreen(),
+      home: const BaseScaffold(child: HomeScreen()),
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
+// Базовый виджет с боковым меню
+class BaseScaffold extends StatelessWidget {
+  final Widget child;
+
+  const BaseScaffold({super.key, required this.child});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Flutter App with Sidebar Menu"),
+        title: const Text(""),
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
@@ -49,22 +58,33 @@ class HomeScreen extends StatelessWidget {
             _buildDrawerItem(context, 'Parabola Animation', '/parabola'),
             _buildDrawerItem(context, 'Lab 2', '/lab2'),
             _buildDrawerItem(context, 'Lab 3', '/lab3'),
+            _buildDrawerItem(context, 'Lab 5', '/lab5'),
           ],
         ),
       ),
-      body: Center(
-        child: Text('Выберите пункт меню'),
-      ),
+      body: child,
     );
   }
 
   Widget _buildDrawerItem(BuildContext context, String title, String route) {
     return ListTile(
-      title: Text(title, style: TextStyle(fontSize: 18)),
+      title: Text(title, style: const TextStyle(fontSize: 18)),
       onTap: () {
-        Navigator.pop(context); // Закрываем Drawer
-        Navigator.pushNamed(context, route); // Переходим по маршруту
+        Navigator.pop(context);
+        Navigator.pushNamed(context, route);
       },
+    );
+  }
+}
+
+// Главная страница
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('Выберите пункт меню'),
     );
   }
 }
