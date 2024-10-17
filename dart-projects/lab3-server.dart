@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 const String filePath = 'number.json';
 
 void main() async {
-
-  f(4, sq)
   final server = await HttpServer.bind(InternetAddress.anyIPv4, 8080);
 
   print('now listening on http://localhost:8080');
@@ -84,20 +81,4 @@ Future<void> handleGet(HttpRequest request) async {
   } finally {
     await request.response.close();
   }
-}
-
-class Singleton {
-  // Статическая переменная, содержащая единственный экземпляр класса Singleton
-  static final Singleton _instance = Singleton.prive();
-
-  // Приватный внутренний конструктор
-  Singleton.prive();
-
-  // Фабричный конструктор, возвращающий единственный экземпляр
-  factory Singleton() => _instance;
-}
-
-void f(int a, Function operation) => print(operation(a));
-double sq(double x) {
-  return sqrt(x);
 }
