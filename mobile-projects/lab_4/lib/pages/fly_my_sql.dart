@@ -12,8 +12,8 @@ class _UserScreenState extends State<MySqlScreen> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
-
-  List<Map<String, dynamic>> users = []; // Список для хранения пользователей
+  final _testController = TextEditingController();
+  List<Map<String, dynamic>> users = [];
 
   Future<void> saveUser() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
@@ -25,8 +25,8 @@ class _UserScreenState extends State<MySqlScreen> {
 
     try {
       await conn.query(
-        'INSERT INTO Mitroshkin (name, phone, email) VALUES (?, ?, ?)',
-        [_nameController.text, _phoneController.text, _emailController.text],
+        'INSERT INTO Mitroshkin (name, phone, email, test) VALUES (?, ?, ?, ?)',
+        [_nameController.text, _phoneController.text, _emailController.text, _testController.text],
       );
       print('User saved');
     } catch (e) {
@@ -45,9 +45,9 @@ class _UserScreenState extends State<MySqlScreen> {
         password: 'bmstubmstu123'));
 
     try {
-      var results = await conn.query('SELECT name, phone, email FROM Mitroshkin');
+      var results = await conn.query('SELECT name, phone, email, test FROM Mitroshkin');
       users = results
-          .map((row) => {'name': row[0], 'phone': row[1], 'email': row[2]})
+          .map((row) => {'name': row[0], 'phone': row[1], 'email': row[2], 'test': row[3]})
           .toList();
       setState(() {});
     } catch (e) {
@@ -81,6 +81,11 @@ class _UserScreenState extends State<MySqlScreen> {
               decoration: const InputDecoration(labelText: 'Почта'),
               keyboardType: TextInputType.emailAddress,
             ),
+            TextFormField(
+              controller: _testController,
+              decoration: const InputDecoration(labelText: 'Test'),
+              keyboardType: TextInputType.text,
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: saveUser,
@@ -101,12 +106,14 @@ class _UserScreenState extends State<MySqlScreen> {
                     DataColumn(label: Text('Имя')),
                     DataColumn(label: Text('Телефон')),
                     DataColumn(label: Text('Почта')),
+                    DataColumn(label: Text('Test'))
                   ],
                   rows: users
                       .map((user) => DataRow(cells: [
                     DataCell(Text(user['name'])),
                     DataCell(Text(user['phone'])),
                     DataCell(Text(user['email'])),
+                    DataCell(Text(user['test']))
                   ]))
                       .toList(),
                 ),

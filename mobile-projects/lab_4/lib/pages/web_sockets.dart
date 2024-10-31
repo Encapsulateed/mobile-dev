@@ -1,16 +1,15 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
-class Lab3Screen extends StatelessWidget {
-  const Lab3Screen({super.key});
-
+class WS_Screen extends StatelessWidget {
+  const WS_Screen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Lab3',
+      title: 'WS Screen',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -27,86 +26,64 @@ class NumberForm extends StatefulWidget {
 }
 
 class _NumberFormState extends State<NumberForm> {
-  final URL = 'http://192.168.191.18:8080';
-
   final _formKey = GlobalKey<FormState>();
   final _numberController = TextEditingController();
   int _currentNumber = 0;
 
-  Future<void> sendNumber() async {
-    final url = Uri.parse('$URL/setNumber');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'number': _currentNumber,
-      }),
-    );
+  late WebSocketChannel _channel;
 
-    if (response.statusCode == 200) {
-      print('Num sent: $_currentNumber');
-    } else {
-      print('Error: ${response.statusCode}');
+  @override
+  void initState() {
+    super.initState();
+
+    try {
+      _channel = IOWebSocketChannel.connect('ws://192.168.191.18:8000');
+    } catch (e) {
+      print("Error in WebSocket connection: $e");
     }
   }
-  Future<void> sendNumberFromNumberController() async {
-    final url = Uri.parse('$URL/setNumber');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'number': int.parse(_numberController.text),
-      }),
-    );
 
-    if (response.statusCode == 200) {
-      print('Num sent: ${_numberController.text}');
-    } else {
-      print('Error: ${response.statusCode}');
-    }
+  void sendNumber(int number) {
+    final data = jsonEncode({
+      'action': 'setNumber',
+      'number': number,
+    });
+    print("Sending number: $number");
+    _channel.sink.add(data);
   }
-//${URL}
-  Future<void> getNumber() async {
-    final url = Uri.parse('$URL/getNumber');
 
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      var jsonResponse = jsonDecode(response.body);
-
-      setState(() {
-        _currentNumber = jsonResponse['number'] as int;
-      });
-    } else {
-      print('Error: ${response.statusCode}');
-    }
+  void getNumber() {
+    final data = jsonEncode({
+      'action': 'getNumber',
+    });
+    _channel.sink.add(data);
   }
 
   void increment() {
     setState(() {
       _currentNumber++;
     });
-
-    sendNumber();
+    sendNumber(_currentNumber);
   }
 
   void decrement() {
     setState(() {
       _currentNumber--;
     });
+    sendNumber(_currentNumber);
+  }
 
-    sendNumber();
+  @override
+  void dispose() {
+    _channel.sink.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lab3'),
+        title: const Text('WS Screen'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -129,7 +106,8 @@ class _NumberFormState extends State<NumberForm> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    sendNumberFromNumberController();
+                    final number = int.parse(_numberController.text);
+                    sendNumber(number);
                   }
                 },
                 child: const Text('Отправить'),

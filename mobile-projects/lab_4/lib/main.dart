@@ -4,6 +4,7 @@ import 'pages/lab3_page.dart';
 import 'pages/parabola.dart';
 import 'pages/lab5_page.dart';
 import 'pages/fly_my_sql.dart';
+import 'pages/web_sockets.dart';
 
 
 void main() {
@@ -24,7 +25,8 @@ class MyApp extends StatelessWidget {
         '/lab2': (context) => const BaseScaffold(child: Lab2Screen()),
         '/lab3': (context) => const BaseScaffold(child: Lab3Screen()),
         '/lab5': (context) => const BaseScaffold(child: Lab5Screen()),
-        '/fly_my_sql' : (context) => const BaseScaffold(child: MySqlScreen())
+        '/fly_my_sql' : (context) => const BaseScaffold(child: MySqlScreen()),
+        '/ws_lab' : (context) => const BaseScaffold(child:  WS_Screen())
       },
       home: const BaseScaffold(child: HomeScreen()),
     );
@@ -63,6 +65,7 @@ class BaseScaffold extends StatelessWidget {
             _buildDrawerItem(context, 'Lab 3', '/lab3'),
             _buildDrawerItem(context, 'Lab 5', '/lab5'),
             _buildDrawerItem(context, 'Fly MySQL', '/fly_my_sql'),
+            _buildDrawerItem(context, 'web sockets', '/ws_lab'),
           ],
         ),
       ),
