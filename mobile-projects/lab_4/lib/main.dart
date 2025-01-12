@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:lab_4/pages/yandex.dart';
 import 'pages/lab2_page.dart';
 import 'pages/lab3_page.dart';
 import 'pages/parabola.dart';
 import 'pages/lab5_page.dart';
 import 'pages/fly_my_sql.dart';
 import 'pages/web_sockets.dart';
+import 'pages/smpt_page.dart';
 
+void main() async {
 
-void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -26,7 +28,9 @@ class MyApp extends StatelessWidget {
         '/lab3': (context) => const BaseScaffold(child: Lab3Screen()),
         '/lab5': (context) => const BaseScaffold(child: Lab5Screen()),
         '/fly_my_sql' : (context) => const BaseScaffold(child: MySqlScreen()),
-        '/ws_lab' : (context) => const BaseScaffold(child:  WS_Screen())
+        '/ws_lab' : (context) => const BaseScaffold(child:  WS_Screen()),
+        '/yandex' : (context) => const BaseScaffold(child: YandexScreen()),
+        '/smpt' : (context)  => const BaseScaffold(child: SmptScreen())
       },
       home: const BaseScaffold(child: HomeScreen()),
     );
@@ -66,6 +70,9 @@ class BaseScaffold extends StatelessWidget {
             _buildDrawerItem(context, 'Lab 5', '/lab5'),
             _buildDrawerItem(context, 'Fly MySQL', '/fly_my_sql'),
             _buildDrawerItem(context, 'web sockets', '/ws_lab'),
+            _buildDrawerItem(context, 'Yandex', '/yandex'),
+            _buildDrawerItem(context, 'SMTP', '/smpt'),
+
           ],
         ),
       ),
